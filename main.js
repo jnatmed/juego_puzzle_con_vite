@@ -1,26 +1,18 @@
-class Juego {
+import { Juego } from "./Juego";
+import Toastify from 'toastify-js';
+import "toastify-js/src/toastify.css";
 
-  /* @method 
-  *  guardo un parte de la imagen y la devuelvo
-  */
-  dibujarImagenEnCanvas(canvas, xOrigen, yOrigen){
-    let ctx = canvas.getContext("2d");
-    var image = new Image();
-    image.src = "imgs/paisaje.jpg";
-    
-    let [anchoOrigen, anchoDestino, altoOrigen, altoDestino] = [100,100,100,100];              
-    let [xDestino, yDestino] = [0,0];
-  
-    ctx.drawImage(image,
-                xOrigen, yOrigen, //coordenada x e y en imagen origen
-                anchoOrigen, altoOrigen, //cant pixeles en ancho y alto que quiero tomar
-                xDestino, yDestino, //coordenada x e y en destino
-                anchoDestino, altoDestino//cuanto va a ocupar la imagen en destino
-    );
-    return canvas;
-  }
-
-}
+function mostrarCartel(cartel, duracion = 3000){
+    Toastify({
+      text: cartel,
+      duration: duracion,
+      className: "info",
+      gravity: "bottom", // `top` or `bottom`
+      style: {
+        background: "linear-gradient(to right, #00b09b, #96c93d)",
+      }
+    }).showToast();
+};
 
 function $(idElement) {
   return document.getElementById(idElement);
@@ -66,6 +58,7 @@ coordYOrigen.forEach(function(coordY){
       canvas.addEventListener('touchstart', e => {
         const canvaSeccionado = $(e.changedTouches[0].target.id).id;
         consola("canvas seleccionado : " + canvaSeccionado)
+        mostrarCartel(`canvas seleccionado : ${canvaSeccionado}`)
         consola("0 " + e)
         let ctx = $(canvaSeccionado).getContext("2d");
         contextoAnterior = ctx;
@@ -125,6 +118,7 @@ for (let i = 0; i < terminado; i++) {
     consola("placeHolder seleccionado : " + placeHolderSeccionado.id)
     if ($(currentCanvas).id.split('_')[1] == placeHolderSeccionado.id){
         placeHolderSeccionado.appendChild($(currentCanvas))
+        mostrarCartel(`Pieza colocada correctamente: placeHolder => ${placeHolderSeccionado.id}`)
     }
 
     // if(currentCanvas){
