@@ -1,8 +1,13 @@
 import { Juego } from "./Juego";
 import Toastify from 'toastify-js';
 import "toastify-js/src/toastify.css";
+import {Howl, Howler} from 'howler';
 
-function mostrarCartel(cartel, duracion = 3000){
+let sound = new Howl({
+  src: ['music/pieza_encajada.mp3']
+});
+
+function mostrarCartel(cartel, duracion = 1000){
     Toastify({
       text: cartel,
       duration: duracion,
@@ -118,7 +123,14 @@ for (let i = 0; i < terminado; i++) {
     consola("placeHolder seleccionado : " + placeHolderSeccionado.id)
     if ($(currentCanvas).id.split('_')[1] == placeHolderSeccionado.id){
         placeHolderSeccionado.appendChild($(currentCanvas))
+        sound.play();
         mostrarCartel(`Pieza colocada correctamente: placeHolder => ${placeHolderSeccionado.id}`)
+        terminado--;
+        if (terminado === 0) {
+          mostrarCartel('Ganaste')
+        }  
+    }else{
+        mostrarCartel('PlaceHolder Incorrecto')      
     }
 
     // if(currentCanvas){
@@ -149,10 +161,14 @@ puzzle.addEventListener('drop', e => {
   const numero = id.split('_')[1];
   console.log(`e.target.id: ${e.target.id}`);
   if(e.target.id === numero){
+    sound.play();
     e.target.appendChild(document.getElementById(id));
     terminado--;
+    mostrarCartel(`Pieza colocada correctamente: placeHolder => ${e.target.id}`)
     if (terminado === 0) {
-      document.body.classList.add('ganaste');
+      mostrarCartel('Ganaste')
     }
-  }
+    }else{
+        mostrarCartel('PlaceHolder Incorrecto')      
+    }
 });

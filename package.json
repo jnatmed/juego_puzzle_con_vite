@@ -12,6 +12,7 @@
     "vite": "^4.3.0"
   },
   "dependencies": {
+    "howler": "^2.2.3",
     "toastify-js": "^1.12.0"
   }
 }
