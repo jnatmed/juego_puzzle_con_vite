@@ -47,6 +47,10 @@ const mensaje = $('mensaje');
 
 let currentCanvas = null;
 let contextoAnterior = null;
+let cartelAcertados = $('acertados');
+let cartelErrados = $('errados');
+let acertados = 0;
+let errados = 0;
 
 
 coordYOrigen.forEach(function(coordY){
@@ -120,22 +124,23 @@ for (let i = 0; i < terminado; i++) {
 
   placeHolder.addEventListener('touchstart', e => {
     const placeHolderSeccionado = $(e.changedTouches[0].target.id);
-    consola("placeHolder seleccionado : " + placeHolderSeccionado.id)
+    consola("placeHolder seleccionado : " + placeHolderSeccionado.id);
+    let banderaErro = false;
     if ($(currentCanvas).id.split('_')[1] == placeHolderSeccionado.id){
         placeHolderSeccionado.appendChild($(currentCanvas))
-        sound.play();
-        mostrarCartel(`Pieza colocada correctamente: placeHolder => ${placeHolderSeccionado.id}`)
+        // sound.play();
+        // mostrarCartel(`Pieza colocada correctamente: placeHolder => ${placeHolderSeccionado.id}`)
         terminado--;
-        if (terminado === 0) {
-          mostrarCartel('Ganaste')
-        }  
+        acertados++;
     }else{
-        mostrarCartel('PlaceHolder Incorrecto')      
+        banderaErro = true;
+        errados++;      
     }
-
-    // if(currentCanvas){
-    //   placeHolderSeccionado.appendChild(currentCanvas)
-    // }
+    mostrarEstadoDelJuego(terminado, 
+                          acertados,
+                          errados,
+                          banderaErro,
+                          placeHolderSeccionado.id);
   })
 }
 
@@ -160,15 +165,37 @@ puzzle.addEventListener('drop', e => {
   console.log(`Id : ${id}`);
   const numero = id.split('_')[1];
   console.log(`e.target.id: ${e.target.id}`);
+  let banderaErro = false;
   if(e.target.id === numero){
-    sound.play();
     e.target.appendChild(document.getElementById(id));
     terminado--;
-    mostrarCartel(`Pieza colocada correctamente: placeHolder => ${e.target.id}`)
-    if (terminado === 0) {
-      mostrarCartel('Ganaste')
-    }
-    }else{
-        mostrarCartel('PlaceHolder Incorrecto')      
-    }
+    acertados++;
+  }else{
+    banderaErro = true;
+    errados++;          
+  }
+  mostrarEstadoDelJuego(terminado, 
+                        acertados,
+                        errados,
+                        banderaErro,
+                        e.target.id);
 });
+
+function mostrarEstadoDelJuego(terminado, 
+                               acertados, 
+                               errados, 
+                               banderaErro,
+                               idPlaceHolder){
+  cartelAcertados.innerHTML = `Acertados : ${acertados}`;  
+  cartelErrados.innerHTML = `Errados : ${errados}`;
+  if(terminado === 0){
+    mostrarCartel('Ganaste')
+    // piezas
+  }
+  if(banderaErro){
+    mostrarCartel('PlaceHolder Incorrecto')
+  }else{
+    sound.play();
+    mostrarCartel(`Pieza colocada correctamente: placeHolder => ${idPlaceHolder}`)
+  }
+}

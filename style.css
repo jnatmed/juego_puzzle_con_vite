@@ -9,6 +9,20 @@ body {
     
 }
 
+#contador{
+    height: 30px;
+    display: flex;
+    background-color: #B3D67C;
+    justify-content: space-around;
+}
+
+#acertados, #errados{
+    font-size: 14px;
+    display: flex;
+    justify-content: center;
+    text-align: center;
+}
+
 #imagen {
     display: none;
     width : 300px;
